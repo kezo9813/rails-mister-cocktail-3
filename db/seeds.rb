@@ -5,3 +5,19 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+require "open-uri"
+require "nokogiri"
+
+
+Dose.delete_all
+Ingredient.delete_all
+Cocktail.delete_all
+html_content = open("https://www.makemycocktail.com/?#HowToMakeACocktail")
+
+doc = Nokogiri::HTML(html_content)
+
+pagination = doc.search('.w3-card label')
+
+pagination.each do |element|
+  Ingredient.create(name: element.children.text)
+end
